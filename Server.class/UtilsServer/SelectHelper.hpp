@@ -2,7 +2,7 @@
 #define SELECTHELPER_HPP
 
 #include <sys/select.h>
-#include "ServerException.hpp"
+#include "../ServerException/ServerException.hpp"
 
 class SelectHelper {
 private:

@@ -42,10 +42,14 @@ void Server::doAccept() {
 
 void Server::doRead(int &socket) {
 	char buf[1024];
+	std::memset(buf, 0, 1024);
 	error_ = recv(socket, buf, 1024, 0);
 	if (error_ <= 0) {
-		if (error_ == 0)
-			Debug::Log(std::to_string(socket) + "\tclose connect", true);
+		if (error_ == 0) {
+			std::string mes = std::to_string(socket) + " close connect";
+			Debug::Log(mes, true);
+			doWrite(socket, mes.c_str());
+		}
 		else
 			Debug::Log("no read", true);
 		close(socket);
@@ -55,11 +59,12 @@ void Server::doRead(int &socket) {
 	}
 }
 
-void Server::doWrite(int &socket, char *buf) {
+void Server::doWrite(int &socket, const char *buf) {
+	std::string cBuf = "Client number " + std::to_string(socket) + ": " + buf;
 	for(int j = 0; j <= selectHelper.getCount(); j++) {
 		if (selectHelper.isMaster(j)) {
 			if (j != socket_ && j != socket) {
-				error_ = send(j, buf, error_, 0);
+				error_ = send(j, cBuf.c_str(), cBuf.size(), 0);
 				if (error_ == -1) {
 					Debug::Log("no write", true);
 				}

@@ -4,8 +4,8 @@
 #include <unistd.h>
 #include "UtilsServer/StructManager.hpp"
 #include "UtilsServer/SelectHelper.hpp"
-#include "UtilsServer/Debug.hpp"
-#include "UtilsServer/ServerException.hpp"
+#include "../Debug.class/Debug.hpp"
+#include "ServerException/ServerException.hpp"
 
 class Server {
 private:
@@ -28,7 +28,7 @@ private:
 
 	void doRead(int &);
 
-	void doWrite (int &, char *);
+	void doWrite (int &, const char *);
 
 	void socketBind();
 
