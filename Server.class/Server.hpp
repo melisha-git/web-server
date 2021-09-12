@@ -6,6 +6,7 @@
 #include "UtilsServer/SelectHelper.hpp"
 #include "../Debug.class/Debug.hpp"
 #include "ServerException/ServerException.hpp"
+#include "../IHTTPMessage.interface/Request.class/Request.hpp"
 
 class Server {
 private:
