@@ -55,6 +55,10 @@ void Server::doRead(int &socket) {
 		close(socket);
 		selectHelper.deleteMaster(socket);
 	} else {
+		Request request("GET / HTTP/1.1\n"
+						"Host: developer.mozilla.org\n"
+						"Accept-Language: fr\n\n");
+		request.makeHeaders();
 		doWrite(socket, buf);
 	}
 }

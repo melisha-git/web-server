@@ -5,9 +5,8 @@
 #include <string>
 
 struct s_headers {
-	std::vector<std::string>	request_headers;
-	std::vector<std::string>	main_headers;
-	std::vector<std::string>	entity_headers;
+	int		size;
+	std::vector<std::string>	headers;
 };
 
 #endif
