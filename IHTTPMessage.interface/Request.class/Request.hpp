@@ -6,15 +6,15 @@
 
 class Request : IHTTPInterface {
 private:
-	std::string request_;
+	const std::string request_;
 public:
 	Request(const std::string &request) : request_(request) {
 	}
 	virtual void makeStartline() {
 		std::string	startline = request_.substr(0, request_.find('\n'));
-		std::cout << "Start Line = " << startline << std::endl;
+
 		this->startline_.method = startline.substr(0, startline.find('/') - 1);
-		startline = startline.substr(startline.find('/'), startline.find(' ') - startline.find('/'));
+		startline.erase(0, startline.find(' ') + 1);
 		this->startline_.target = startline.substr(0, startline.find(' '));
 		this->startline_.version = startline.substr(startline.find(' ') + 1);
 
@@ -23,23 +23,31 @@ public:
 		std::cout << "Version " << this->startline_.version << std::endl;
 	}
 	virtual void makeHeaders() {
-		this->headers_.size = 0;
-		std::string headers = request_.substr(request_.find('\n') + 1);
-		std::string delimiter = "\n";
-
-		size_t pos = 0;
-		std::string token;
-		while ((pos = headers.find(delimiter)) != std::string::npos) {
-			token = headers.substr(0, pos);
-			this->headers_.headers.push_back(token);
-			std::cout << this->headers_.headers[this->headers_.size++] << std::endl << '*';
-			headers.erase(0, pos + delimiter.length());
-			if (headers[pos] == '\n' && headers[pos + 1] == '\n')
-				break;
+		this->headers_.headers = splitVector(request_.substr(request_.find('\n') + 1, request_.find("\n\n") - request_.find('\n') - 1));
+		for (const std::string &s : this->headers_.headers) {
+			std::cout << s << std::endl;
 		}
 	}
 	virtual void makeBodyes() {
+		std::vector<std::string> vSplit = splitVector(request_ + "\n\n", "\n\n");
+		if (vSplit.size() == 1) {
+			std::cout << "{" << vSplit[0] << "}" << std::endl;
+			return;
+		}
+		this->bodyes_.bodyes.push_back(vSplit[1]);
+	}
 
+private:
+	std::vector<std::string>	splitVector(std::string lines, std::string delimiter = "\n") {
+		std::vector<std::string>	result;
+
+		std::string token;
+		for (size_t pos = lines.find(delimiter); pos != std::string::npos; pos = lines.find(delimiter)) {
+			token = lines.substr(0, pos);
+			result.push_back(token);
+			lines.erase(0, pos + delimiter.length());
+		}
+		return result;
 	}
 };
 

@@ -5,7 +5,6 @@
 #include <string>
 
 struct s_bodyes {
-	int		size;
 	std::vector<std::string>	bodyes;
 };
 

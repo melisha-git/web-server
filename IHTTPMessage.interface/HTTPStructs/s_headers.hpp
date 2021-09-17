@@ -5,7 +5,6 @@
 #include <string>
 
 struct s_headers {
-	int		size;
 	std::vector<std::string>	headers;
 };
 
