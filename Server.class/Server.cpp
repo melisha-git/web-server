@@ -1,4 +1,5 @@
 #include "Server.hpp"
+#include <fstream>
 
 Server::Server(const Server::connection_struct &connectionStruct) : error_(1), structManager(connectionStruct) {
 	socketInit(connectionStruct);
@@ -55,15 +56,13 @@ void Server::doRead(int &socket) {
 		close(socket);
 		selectHelper.deleteMaster(socket);
 	} else {
-		Request request("GET / HTTP/1.1\n"
-						"Host: developer.mozilla.org\n"
-						"Accept-Language: fr\n\n"
-						"FILE\n"
-						"OUTPUT\n"
-						"FUCKING\n");
-		request.makeStartline();
-		request.makeHeaders();
-		request.makeBodyes();
+		std::ofstream ofs("Request.txt");
+		ofs << buf;
+		ofs.close();
+//		Request request("GET / HTTP/1.1\n"
+//						"Content-Length: 12\n\n"
+//						"FUCKING TEXT\n");
+//		Response response(request.getStartLine(), request.getHeaders(), request.getBodyes());
 		doWrite(socket, buf);
 	}
 }

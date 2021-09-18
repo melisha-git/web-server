@@ -18,4 +18,5 @@ add_executable(web_server
                IHTTPMessage.interface/HTTPStructs/s_headers.hpp
                IHTTPMessage.interface/HTTPStructs/s_bodyes.hpp
                IHTTPMessage.interface/IHTTP.interface.hpp
-               IHTTPMessage.interface/Request.class/Request.hpp)
+               IHTTPMessage.interface/Request.class/Request.hpp
+               IHTTPMessage.interface/Response.class/Response.class.hpp UnitTests/main.cpp UnitTests/UnitTestsHeader.h)

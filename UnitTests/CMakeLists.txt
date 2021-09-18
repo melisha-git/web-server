@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
-project(UnitTestsWebServer)
+project(UnitTests)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(UnitTestsWebServer
-              RequestTests/StartLineTest.cpp)
+add_executable(UnitTests main.cpp
+               RequestTests/RequestTests.cpp UnitCompare.cpp)

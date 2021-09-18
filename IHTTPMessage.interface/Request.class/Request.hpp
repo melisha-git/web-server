@@ -4,12 +4,29 @@
 #include <iostream>
 #include "../IHTTP.interface.hpp"
 
-class Request : IHTTPInterface {
+class Request : IHTTPMessage {
 private:
 	const std::string request_;
 public:
 	Request(const std::string &request) : request_(request) {
+		makeStartline();
+		makeHeaders();
+		makeBodyes();
 	}
+
+	const s_startline &getStartLine() {
+		return this->startline_;
+	}
+
+	const s_headers &getHeaders() {
+		return this->headers_;
+	}
+
+	const s_bodyes &getBodyes() {
+		return this->bodyes_;
+	}
+
+private:
 	virtual void makeStartline() {
 		std::string	startline = request_.substr(0, request_.find('\n'));
 
@@ -17,23 +34,16 @@ public:
 		startline.erase(0, startline.find(' ') + 1);
 		this->startline_.target = startline.substr(0, startline.find(' '));
 		this->startline_.version = startline.substr(startline.find(' ') + 1);
-
-		std::cout << "Method  " << this->startline_.method << std::endl;
-		std::cout << "Target  " << this->startline_.target << std::endl;
-		std::cout << "Version " << this->startline_.version << std::endl;
 	}
 	virtual void makeHeaders() {
-		this->headers_.headers = splitVector(request_.substr(request_.find('\n') + 1, request_.find("\n\n") - request_.find('\n') - 1));
-		for (const std::string &s : this->headers_.headers) {
-			std::cout << s << std::endl;
-		}
+		this->headers_.headers = splitVector(request_.substr(request_.find('\n') + 1, request_.find("\n\n") - request_.find('\n')));
 	}
 	virtual void makeBodyes() {
 		std::vector<std::string> vSplit = splitVector(request_ + "\n\n", "\n\n");
 		if (vSplit.size() == 1) {
-			std::cout << "{" << vSplit[0] << "}" << std::endl;
 			return;
 		}
+		//TODO ADD ALL BODYES
 		this->bodyes_.bodyes.push_back(vSplit[1]);
 	}
 

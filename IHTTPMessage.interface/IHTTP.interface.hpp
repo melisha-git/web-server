@@ -5,7 +5,7 @@
 #include "HTTPStructs/s_headers.hpp"
 #include "HTTPStructs/s_bodyes.hpp"
 
-class IHTTPInterface {
+class IHTTPMessage {
 protected:
 	s_startline startline_;
 	s_headers	headers_;

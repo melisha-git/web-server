@@ -7,6 +7,7 @@
 #include "../Debug.class/Debug.hpp"
 #include "ServerException/ServerException.hpp"
 #include "../IHTTPMessage.interface/Request.class/Request.hpp"
+#include "../IHTTPMessage.interface/Response.class/Response.class.hpp"
 
 class Server {
 private:
