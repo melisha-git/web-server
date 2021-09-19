@@ -7,9 +7,9 @@
 
 class IHTTPMessage {
 protected:
-	s_startline startline_;
-	s_headers	headers_;
-	s_bodyes	bodyes_;
+	s_startline s_startline_;
+	s_headers	s_headers_;
+	s_bodyes	s_bodyes_;
 public:
 	virtual void makeStartline() = 0;
 	virtual void makeHeaders() = 0;

@@ -7,6 +7,7 @@
 class Request : IHTTPMessage {
 private:
 	const std::string request_;
+	bool isBodyes_;
 public:
 	explicit Request(const std::string &request);
 
