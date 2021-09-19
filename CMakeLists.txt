@@ -3,6 +3,8 @@ project(web_server)
 
 set(CMAKE_CXX_STANDARD 14)
 
+add_subdirectory(Google_tests)
+
 add_executable(web_server
                main.cpp
                Server.class/Server.hpp
@@ -19,4 +21,6 @@ add_executable(web_server
                IHTTPMessage.interface/HTTPStructs/s_bodyes.hpp
                IHTTPMessage.interface/IHTTP.interface.hpp
                IHTTPMessage.interface/Request.class/Request.hpp
-               IHTTPMessage.interface/Response.class/Response.class.hpp IHTTPMessage.interface/Request.class/Request.cpp IHTTPMessage.interface/Response.class/Response.cpp)
+               IHTTPMessage.interface/Response.class/Response.class.hpp
+               IHTTPMessage.interface/Request.class/Request.cpp
+               IHTTPMessage.interface/Response.class/Response.cpp)
