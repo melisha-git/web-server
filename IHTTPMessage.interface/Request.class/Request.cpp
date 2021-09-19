@@ -39,6 +39,8 @@ void Request::makeBodyes()  {
 	std::vector<std::string> vSplit = splitVector(request_ + "\n\n", "\n\n");
 	//TODO ADD ALL BODYES
 	this->s_bodyes_.bodyes.push_back(vSplit[1]);
+	if (this->s_bodyes_.bodyes == std::vector<std::string>{""})
+		this->s_bodyes_.bodyes.clear();
 }
 
 std::vector<std::string> Request::splitVector(std::string lines, const std::string &delimiter) const  {

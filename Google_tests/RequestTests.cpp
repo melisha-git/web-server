@@ -74,7 +74,7 @@ TEST(Request, BodyesTestNoBodyes) {
 	Request request("GET /favicon.ico HTTP/1.1\n"
 					"Host: developer.mozilla.org\n"
 					"Accept-Language: fr\n\n");
-	std::vector<std::string> vc = {""};
+	std::vector<std::string> vc;
 	EXPECT_EQ(request.getBodyes().bodyes, vc);
 }
 
