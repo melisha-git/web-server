@@ -19,7 +19,7 @@ public:
 	typedef StructManager::connection_struct	connection_struct;
 	typedef ServerException						ServerException;
 public:
-	Server(const Server::connection_struct &);
+	explicit Server(const Server::connection_struct &);
 
 	void start();
 

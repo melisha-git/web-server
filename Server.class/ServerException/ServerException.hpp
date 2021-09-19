@@ -7,7 +7,7 @@
 class ServerException : std::exception {
 	virtual const char* what() const throw();
 public:
-	ServerException(const std::string &log);
+	explicit ServerException(const std::string &);
 private:
 	std::string logLine_;
 };

@@ -20,9 +20,9 @@ public:
 
 	void makeSelect();
 
-	bool isUtils(const int &socket);
+	bool isUtils(const int &socket) const;
 
-	bool isMaster(const int &socket);
+	bool isMaster(const int &socket) const;
 
 	int getCount() const;
 };

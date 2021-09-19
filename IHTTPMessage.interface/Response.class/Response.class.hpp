@@ -5,25 +5,12 @@
 
 class Response : public IHTTPMessage {
 public:
-	Response(const s_startline &startline, const s_headers &headers, const s_bodyes &bodyes) {
-		this->startline_ = startline;
-		this->headers_ = headers;
-		this->bodyes_ = bodyes;
-		makeStartline();
-		makeHeaders();
-		makeBodyes();
-	}
+	Response(const s_startline &startline, const s_headers &headers, const s_bodyes &bodyes);
 
 private:
-	virtual void makeStartline() {
-		
-	}
-	virtual void makeHeaders() {
-
-	}
-	virtual void makeBodyes() {
-
-	}
+	virtual void makeStartline();
+	virtual void makeHeaders();
+	virtual void makeBodyes();
 };
 
 #endif

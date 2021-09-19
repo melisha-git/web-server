@@ -1,5 +1,10 @@
 #include "StructManager.hpp"
 
+StructManager::connection_struct::connection_struct(const int &port, const std::string &ip) {
+	this->port = port;
+	this->ip = ip;
+}
+
 StructManager::StructManager(const connection_struct &connectionStruct) {
 	serverAddress_.sin_family = AF_INET;
 	serverAddress_.sin_port = htons(connectionStruct.port);
@@ -18,3 +23,4 @@ socklen_t *StructManager::getSize()  {
 void StructManager::updateSize() {
 	size_ = sizeof (serverAddress_);
 }
+

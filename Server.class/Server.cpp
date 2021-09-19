@@ -56,13 +56,6 @@ void Server::doRead(int &socket) {
 		close(socket);
 		selectHelper.deleteMaster(socket);
 	} else {
-		std::ofstream ofs("Request.txt");
-		ofs << buf;
-		ofs.close();
-//		Request request("GET / HTTP/1.1\n"
-//						"Content-Length: 12\n\n"
-//						"FUCKING TEXT\n");
-//		Response response(request.getStartLine(), request.getHeaders(), request.getBodyes());
 		doWrite(socket, buf);
 	}
 }

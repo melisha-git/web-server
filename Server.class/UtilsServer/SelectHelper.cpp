@@ -23,11 +23,11 @@ void SelectHelper::makeSelect() {
 	}
 }
 
-bool SelectHelper::isUtils(const int &socket)  {
+bool SelectHelper::isUtils(const int &socket) const {
 	return FD_ISSET(socket, &utils_FD_);
 }
 
-bool SelectHelper::isMaster(const int &socket)  {
+bool SelectHelper::isMaster(const int &socket) const {
 	return FD_ISSET(socket, &master_FD_);
 }
 

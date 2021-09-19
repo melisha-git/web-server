@@ -12,13 +12,10 @@ public:
 	typedef struct connection_struct {
 		int port;
 		std::string ip;
-		connection_struct(const int &port, const std::string &ip) {
-			this->port = port;
-			this->ip = ip;
-		}
-	} connection_struct;
+		connection_struct(const int &port, const std::string &ip);
+	};
 public:
-	StructManager(const connection_struct &);
+	explicit StructManager(const connection_struct &);
 
 	struct sockaddr_in *getStruct();
 
