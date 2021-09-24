@@ -17,7 +17,7 @@ private:
 	int 				socket_;
 public:
 	typedef StructManager::connection_struct	connection_struct;
-	typedef ServerException						ServerException;
+//	typedef ServerException						ServerException;
 public:
 	explicit Server(const Server::connection_struct &);
 

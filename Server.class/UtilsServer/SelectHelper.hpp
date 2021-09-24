@@ -10,8 +10,6 @@ private:
 	fd_set				master_FD_;
 	fd_set				utils_FD_;
 public:
-	typedef ServerException		ServerException;
-public:
 	SelectHelper();
 
 	void setMaster(const int &socket);

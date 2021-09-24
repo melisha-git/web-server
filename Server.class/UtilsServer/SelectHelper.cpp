@@ -19,7 +19,7 @@ void SelectHelper::deleteMaster(const int &socket) {
 void SelectHelper::makeSelect() {
 	utils_FD_ = master_FD_;
 	if (select(countFD_ + 1, &utils_FD_, 0, 0, 0) == -1) {
-		throw SelectHelper::ServerException("no select");
+		throw ServerException("no select");
 	}
 }
 

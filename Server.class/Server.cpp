@@ -1,5 +1,6 @@
 #include "Server.hpp"
 #include <fstream>
+#include "string.h"
 
 Server::Server(const Server::connection_struct &connectionStruct) : error_(1), structManager(connectionStruct) {
 	socketInit(connectionStruct);
@@ -35,7 +36,7 @@ void Server::doAccept() {
 	Debug::Log("new connect");
 	acceptFD = accept(socket_, reinterpret_cast<sockaddr*>(structManager.getStruct()), structManager.getSize());
 	if (acceptFD == -1) {
-		throw Server::ServerException("no accept");
+		throw ServerException("no accept");
 	} else {
 		selectHelper.setMaster(acceptFD);
 	}
@@ -43,7 +44,7 @@ void Server::doAccept() {
 
 void Server::doRead(int &socket) {
 	char buf[1024];
-	std::memset(buf, 0, 1024);
+	memset(buf, 0, 1024);
 	error_ = recv(socket, buf, 1024, 0);
 	if (error_ <= 0) {
 		if (error_ == 0) {
@@ -79,20 +80,20 @@ void Server::socketBind() {
 
 	error_ = bind(socket_, reinterpret_cast<sockaddr *>((structManager.getStruct())), *structManager.getSize());
 	if (error_ == -1) {
-		throw Server::ServerException("no bind");
+		throw ServerException("no bind");
 	}
 }
 
 void Server::socketListening() {
 	error_ = listen(socket_, 10);
 	if (error_ == -1) {
-		throw Server::ServerException("no listen");
+		throw ServerException("no listen");
 	}
 }
 
 void Server::socketInit(const Server::connection_struct &connectionStruct) {
 	socket_ = socket(AF_INET, SOCK_STREAM, 0);
 	if (socket_ == -1) {
-		throw Server::ServerException("no socket");
+		throw ServerException("no socket");
 	}
 }

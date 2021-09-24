@@ -9,7 +9,7 @@ private:
 	struct sockaddr_in	serverAddress_;
 	socklen_t 			size_;
 public:
-	typedef struct connection_struct {
+	struct connection_struct {
 		int port;
 		std::string ip;
 		connection_struct(const int &port, const std::string &ip);
