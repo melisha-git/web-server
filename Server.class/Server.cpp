@@ -1,6 +1,9 @@
 #include "Server.hpp"
 #include <fstream>
 
+# include "../IHTTPMessage.interface/Response.class/errorResponse.hpp"
+# include "../IHTTPMessage.interface/Request.class/Request.hpp"
+
 Server::Server(const Server::connection_struct &connectionStruct) : error_(1), structManager(connectionStruct) {
 	socketInit(connectionStruct);
 	socketBind();
@@ -42,6 +45,29 @@ void Server::doAccept() {
 }
 
 void Server::doRead(int &socket) {
+
+//    const unsigned int MAX_BUF_LENGTH = 4096;
+//    std::vector<char> buffer(MAX_BUF_LENGTH);
+//    std::string receivedString;
+//    int bytesReceived_ = 0;
+//    do {
+//        bytesReceived_ = recv(socket, &buffer[0], buffer.size(), 0);
+//        if (bytesReceived_ <= 0) {
+//            if (bytesReceived_ == 0) {
+//                std::string mes = std::to_string(socket) + " close connect";
+//                Debug::Log(mes, true);
+//                doWrite(socket, mes.c_str());
+//            } else
+//                Debug::Log("no read", true);
+//            close(socket);
+//            selectHelper.deleteMaster(socket);
+//        } else {
+//            receivedString.append(buffer.cbegin(), buffer.cend());
+//        }
+//    } while (bytesReceived_ == MAX_BUF_LENGTH);
+//    if (bytesReceived_ > 0)
+//        doWrite(socket, receivedString.c_str());
+
 	char buf[1024];
 	std::memset(buf, 0, 1024);
 	error_ = recv(socket, buf, 1024, 0);
@@ -56,22 +82,36 @@ void Server::doRead(int &socket) {
 		close(socket);
 		selectHelper.deleteMaster(socket);
 	} else {
-		doWrite(socket, buf);
+        const std::string buffer  = std::string(buf);
+        Request req(buffer);
+        Response resp(req.getResponseType());
+		doWrite(socket, resp.getResponse());
 	}
 }
 
-void Server::doWrite(int &socket, const char *buf) {
-	std::string cBuf = "Client number " + std::to_string(socket) + ": " + buf;
-	for(int j = 0; j <= selectHelper.getCount(); j++) {
-		if (selectHelper.isMaster(j)) {
-			if (j != socket_ && j != socket) {
-				error_ = send(j, cBuf.c_str(), cBuf.size(), 0);
-				if (error_ == -1) {
-					Debug::Log("no write", true);
-				}
-			}
-		}
-	}
+void Server::doWrite(int &socket, const std::string & buf) {
+//	std::string cBuf = "Client number " + std::to_string(socket) + ": " + buf;
+//
+for(int j = 0; j <= selectHelper.getCount(); j++) {
+    if (selectHelper.isMaster(socket)) {
+        if (j == socket){
+            error_ = send(socket, &buf[0], buf.size(), 0);
+            if (error_ == -1) {
+                Debug::Log("no write", true);
+            }
+        }
+    }
+}
+//	for(int j = 0; j <= selectHelper.getCount(); j++) {
+//		if (selectHelper.isMaster(j)) {
+//			if (j != socket_ && j != socket) {
+//				error_ = send(j, cBuf.c_str(), cBuf.size(), 0);
+//				if (error_ == -1) {
+//					Debug::Log("no write", true);
+//				}
+//			}
+//		}
+//	}
 }
 
 void Server::socketBind() {
@@ -84,14 +124,15 @@ void Server::socketBind() {
 }
 
 void Server::socketListening() {
-	error_ = listen(socket_, 10);
-	if (error_ == -1) {
+        error_ = listen(socket_, 10);
+        if (error_ == -1) {
 		throw Server::ServerException("no listen");
 	}
 }
 
 void Server::socketInit(const Server::connection_struct &connectionStruct) {
 	socket_ = socket(AF_INET, SOCK_STREAM, 0);
+    fcntl(socket_, F_SETFL, O_NONBLOCK);
 	if (socket_ == -1) {
 		throw Server::ServerException("no socket");
 	}

@@ -52,7 +52,7 @@ TEST(Request, HeadersTestNN) {
 	EXPECT_EQ(request.getHeaders().headers, vc);
 }
 
-TEST(Request, HeadersTestNoBodyes) {
+TEST(Request, HeadersTestNoBodies) {
 	Request request("GET /favicon.ico HTTP/1.1\n"
 					"Host: developer.mozilla.org\n"
 					"Accept-Language: fr");
@@ -60,7 +60,7 @@ TEST(Request, HeadersTestNoBodyes) {
 	EXPECT_EQ(request.getHeaders().headers, vc);
 }
 
-TEST(Request, HeadersTestBodyes) {
+TEST(Request, HeadersTestBodies) {
 	Request request("GET /favicon.ico HTTP/1.1\n"
 					"Host: developer.mozilla.org\n"
 					"Accept-Language: fr\n\n"
@@ -70,15 +70,15 @@ TEST(Request, HeadersTestBodyes) {
 	EXPECT_EQ(request.getHeaders().headers, vc);
 }
 
-TEST(Request, BodyesTestNoBodyes) {
+TEST(Request, BodiesTestNoBodies) {
 	Request request("GET /favicon.ico HTTP/1.1\n"
 					"Host: developer.mozilla.org\n"
 					"Accept-Language: fr\n\n");
 	std::vector<std::string> vc;
-	EXPECT_EQ(request.getBodyes().bodyes, vc);
+	EXPECT_EQ(request.getBodies().bodies, vc);
 }
 
-TEST(Request, BodyesTestBodyes) {
+TEST(Request, BodiesTestBodies) {
 	Request request("GET /favicon.ico HTTP/1.1\n"
 					"Host: developer.mozilla.org\n"
 					"Accept-Language: fr\n\n"
@@ -86,5 +86,5 @@ TEST(Request, BodyesTestBodyes) {
 					"SOSI KIRPICH");
 	std::vector<std::string> vc = {"FUCKING BITCH\n"
 								   "SOSI KIRPICH"};
-	EXPECT_EQ(request.getBodyes().bodyes, vc);
+	EXPECT_EQ(request.getBodies().bodies, vc);
 }

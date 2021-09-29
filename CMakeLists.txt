@@ -18,9 +18,9 @@ add_executable(web_server
                Server.class/ServerException/ServerException.cpp
                Debug.class/Debug.cpp
                IHTTPMessage.interface/HTTPStructs/s_headers.hpp
-               IHTTPMessage.interface/HTTPStructs/s_bodyes.hpp
+               IHTTPMessage.interface/HTTPStructs/s_bodies.hpp
                IHTTPMessage.interface/IHTTP.interface.hpp
                IHTTPMessage.interface/Request.class/Request.hpp
                IHTTPMessage.interface/Response.class/Response.class.hpp
                IHTTPMessage.interface/Request.class/Request.cpp
-               IHTTPMessage.interface/Response.class/Response.cpp)
+               IHTTPMessage.interface/Response.class/Response.cpp IHTTPMessage.interface/Response.class/errorResponse.hpp)

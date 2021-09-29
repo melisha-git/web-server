@@ -8,6 +8,7 @@
 #include "ServerException/ServerException.hpp"
 #include "../IHTTPMessage.interface/Request.class/Request.hpp"
 #include "../IHTTPMessage.interface/Response.class/Response.class.hpp"
+#include <fcntl.h>
 
 class Server {
 private:
@@ -30,7 +31,7 @@ private:
 
 	void doRead(int &);
 
-	void doWrite (int &, const char *);
+	void doWrite (int &, const std::string &);
 
 	void socketBind();
 

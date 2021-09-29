@@ -7,7 +7,7 @@
 class Request : IHTTPMessage {
 private:
 	const std::string request_;
-	bool isBodyes_;
+	bool isBodies_;
 public:
 	explicit Request(const std::string &request);
 
@@ -15,15 +15,22 @@ public:
 
 	const s_headers &getHeaders() const;
 
-	const s_bodyes &getBodyes() const;
+	const s_bodies &getBodies() const;
+
+	int getResponseType() const { return responseType; }
+
+//	void print() const;
 
 private:
 	virtual void makeStartline();
 	virtual void makeHeaders();
-	virtual void makeBodyes();
+	virtual void makeBodies();
 
 private:
 	std::vector<std::string>	splitVector(std::string lines, const std::string &delimiter = "\n") const;
+    int responseType;
 };
+
+//std::ostream & operator<<(std::ostream & o, const Request & rhs);
 
 #endif
