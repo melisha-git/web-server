@@ -19,7 +19,7 @@ struct s_startline {
 		return *this;
 	}
 
-	bool isMethodAllowed() const {
+    bool isMethodAllowed() const {
 	    if (method == "GET" || method == "POST" || method == "DELETE")
 	        return true;
 	    return false;

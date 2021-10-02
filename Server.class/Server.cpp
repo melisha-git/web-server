@@ -66,7 +66,16 @@ void Server::doRead(int &socket) {
 //        }
 //    } while (bytesReceived_ == MAX_BUF_LENGTH);
 //    if (bytesReceived_ > 0)
-//        doWrite(socket, receivedString.c_str());
+//    {
+//        std::cout << receivedString << std::endl;
+//        Request req(receivedString);
+////        if (req.getResponseType() == 200)
+////        {
+////
+////        }
+//        Response resp(req.getResponseType(), req.getStartLine(), req.getHeaders(), req.getBodies());
+//        doWrite(socket, resp.getResponse());
+//    }
 
 	char buf[1024];
 	std::memset(buf, 0, 1024);
@@ -84,24 +93,40 @@ void Server::doRead(int &socket) {
 	} else {
         const std::string buffer  = std::string(buf);
         Request req(buffer);
-        Response resp(req.getResponseType());
+        Response resp(req.getResponseType(), req.getStartLine(), req.getHeaders(), req.getBodies());
+
 		doWrite(socket, resp.getResponse());
 	}
 }
 
+//int Server::sendAll(int &socket,  const std::string & buf, int bufLength)
+//{
+//    int totalBytesSend = 0;
+//    int bytesLeftToSend = bufLength; // сколько байт осталось послать
+//    int chunk = 0;
+//    while (totalBytesSend < bufLength) {
+//        chunk = send(socket, &buf[totalBytesSend], bytesLeftToSend, 0);
+//        if (chunk == -1) { return -1; }
+//        totalBytesSend += chunk;
+////        bytesLeftToSend -= chunk;
+//    }
+//    return 0;
+//}
+
 void Server::doWrite(int &socket, const std::string & buf) {
 //	std::string cBuf = "Client number " + std::to_string(socket) + ": " + buf;
 //
-for(int j = 0; j <= selectHelper.getCount(); j++) {
+//for(int j = 0; j <= selectHelper.getCount(); j++) {
     if (selectHelper.isMaster(socket)) {
-        if (j == socket){
+//        if (j == socket){
+//            error_ = sendAll(socket_, &buf[0], buf.size());
             error_ = send(socket, &buf[0], buf.size(), 0);
             if (error_ == -1) {
                 Debug::Log("no write", true);
-            }
+//            }
         }
     }
-}
+//}
 //	for(int j = 0; j <= selectHelper.getCount(); j++) {
 //		if (selectHelper.isMaster(j)) {
 //			if (j != socket_ && j != socket) {

@@ -1,14 +1,18 @@
 #include "Response.class.hpp"
+#include <fstream>
 
-//Response::Response(const s_startline &startline, const s_headers &headers, const s_bodies &bodies) {
-//	this->s_startline_ = startline;
-//	this->s_headers_ = headers;
-//	this->s_bodies_ = bodies;
+Response::Response(int responseType, const s_startline &startline, const s_headers &headers, const s_bodies &bodies) :
+        statusCode_(responseType) {
 //	makeStartline();
 //	makeHeaders();
 //	makeBodies();
-//}
-//
+    s_startline_ = startline;
+    s_headers_ = headers;
+    s_bodies_ = bodies;
+    setAttributes();
+    createResponse();
+}
+
 void Response::makeStartline() {
 
 }
@@ -21,22 +25,24 @@ void Response::makeBodies() {
 
 }
 
-const std::string &Response::getResponse() const {
-	return response_;
-}
-
-Response::Response(int responseType) : responseType_(responseType) {
-    setAttributes();
-    createResponse();
-}
+/**
+ * calls all setters in order, depending on status code calls either setBody ot setErrorBody
+ */
 
 void Response::setAttributes() {
     setStatusLine();
     setDate();
-//    if (responseType_ != 200)
-    setErrorBody();
+    setContentType();
+    if (statusCode_ == 200)
+        setBody();
+    if (statusCode_ != 200)
+        setErrorBody();
     setContentLength();
 }
+
+/**
+ * set date which will be used as one of the headers in HTTP Response
+ */
 
 void Response::setDate() {
     const std::string day[]={"Sun","Mon","Tue",
@@ -62,13 +68,17 @@ void Response::setDate() {
     date_ = out.str();
 }
 
+/**
+ * fill status line of HTTP Response: protocol version(HTTP/1.1), status code and status text
+ */
+
 void Response::setStatusLine() {
     statusLine_ = "HTTP/1.1 ";
 
     std::string const arrStatus[] = {"200 OK", "400 Bad Request", "404 Not Found", "405 Method Not Allowed",
                                      "501 Not Implemented", "505 HTTP Version Not Supported"};
     std::ostringstream ss;
-    ss << responseType_;
+    ss << statusCode_;
 
     std::string errorNumber = ss.str();
 
@@ -80,11 +90,12 @@ void Response::setStatusLine() {
         }
 }
 
+/**
+ * depending on status code fill body with error message from errorResponse.hpp
+ */
+
 void Response::setErrorBody() {
-    switch (responseType_) {
-        case 200:
-            body_ = error_200;
-            break;
+    switch (statusCode_) {
         case 400:
             body_ = error_400;
             break;
@@ -112,6 +123,40 @@ void Response::setErrorBody() {
     }
 }
 
+/**
+ * do some operations on file and its name and sets error status code in some case
+ * otherwise it fills body with info from file
+ */
+
+void Response::setBody() {
+    if (s_startline_.target == "/")
+        return ;
+
+    std::string filename = s_startline_.target;
+    if (filename[0] == '/')
+        filename.erase(0, 1);
+
+    std::ifstream file(filename);
+
+    if (file.is_open()) {
+        std::string line;
+        std::cout << "yes" << std::endl;
+        while (!file.eof()) {
+
+            getline(file, line);
+            body_.append(line + "\r\n");
+//            body_.append(line);
+        }
+        file.close();
+    }
+    else
+        statusCode_ = 404;
+}
+
+/**
+ * set attribute content length for http header
+ */
+
 void Response::setContentLength() {
     std::ostringstream ss;
 
@@ -119,22 +164,40 @@ void Response::setContentLength() {
     contentLength_ = ss.str();
 }
 
-void Response::createResponse() {
-    response_.append(getStatusLine() + "\r\n");
-    response_.append("date: " + getDate() + "\r\n");
-    response_.append("content-length: " + getContentLength() + "\r\n");
 
-    if (responseType_ == 405)
-        response_.append("allow: GET, POST, DELETE\r\n");
+void Response::setContentType() {
+    if (statusCode_ != 200)
+        contentType_ = "html";
 
-    response_.append(getBody());
+    size_t startOfType = s_startline_.target.find_last_of('.');
+
+    if (startOfType != std::string::npos)
+        contentType_ = s_startline_.target.substr(startOfType + 1, s_startline_.target.length());
 }
 
-std::string Response::getStatusLine() const { return statusLine_; }
+/**
+ * create response appending info from getters in Status-Line -> Headers -> Body order
+ */
 
-std::string Response::getDate() const { return date_;}
+void Response::createResponse() {
+    response_.append(getStatusLine() + "\r\n"); // с++11 синтаксис
+    response_.append("date: " + getDate() + "\r\n");
+    if (!contentType_.empty())
+        response_.append("content-type: " + contentType_ + "\r\n");
+    response_.append("content-length: " + getContentLength() + "\r\n");
 
-std::string Response::getBody() const { return body_; }
+    if (statusCode_ == 405)
+        response_.append("allow: GET, POST, DELETE\r\n");
 
-std::string Response::getContentLength() const { return contentLength_; }
+    response_.append("\n" + getBody());
+}
 
+const std::string &Response::getStatusLine() const { return statusLine_; }
+
+const std::string &Response::getDate() const { return date_;}
+
+const std::string &Response::getBody() const { return body_; }
+
+const std::string &Response::getContentLength() const { return contentLength_; }
+
+const std::string &Response::getResponse() const {return response_; }

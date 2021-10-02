@@ -3,9 +3,9 @@
 Request::Request(const std::string &request) : request_(request), responseType(0) {
     isBodies_ = (request_.find("\n\n") != std::string::npos);
     makeStartline();
-    if (responseType == 200)
+//    if (responseType == 0)
         makeHeaders();
-    if (responseType == 200)
+//    if (responseType == 0)
         makeBodies();
 }
 
@@ -65,13 +65,13 @@ void Request::makeStartline() {
 
 void Request::makeHeaders() {
     std::vector<std::string> _vecHeaders;
+    isBodies_ = request_.find("\r\n\n");
 
-    _vecHeaders = splitVector(request_.substr(request_.find('\n') + 1, request_.find("\r\n\n")), "\r'n");
+    _vecHeaders = splitVector(request_.substr(request_.find('\n') + 1, isBodies_), "\r\n");
 
     auto it = _vecHeaders.cbegin();
     auto ite = _vecHeaders.cend();
     for (;it < ite; it++) {
-        std::cout << "before - " << (*it) << std::endl;
         this->s_headers_.headers[(*it).substr(0, request_.find(':'))] = (*it).substr(request_.find(':') + 1,
                                                                                      request_.find("\r\n"));
     }
@@ -102,19 +102,3 @@ std::vector<std::string> Request::splitVector(std::string lines, const std::stri
 		result.push_back(lines.substr(0, pos));
 	return result;
 }
-
-//
-//std::ostream & operator<<(std::ostream & o, const Request & rhs) {
-//    o << rhs.getStartLine().method << std::endl
-//      << rhs.getStartLine().target << std::endl
-//      << rhs.getStartLine().version << std::endl;
-//    return o;
-//};
-//
-//void Request::print() const {
-//
-//        for(std::map<std::string, std::string>::const_iterator it = this->s_headers_.headers.cbegin();
-//        it != this->s_headers_.headers.cend(); ++it)
-//            std::cout << (*it).first << " " << (*it).second << "\n";
-//
-//}

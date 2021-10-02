@@ -38,6 +38,8 @@ private:
 	void socketListening();
 
 	void socketInit(const Server::connection_struct &connectionStruct);
+
+//	int sendAll(int & socket,  const std::string & buf, int bufLength);
 };
 
 #endif

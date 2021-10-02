@@ -4,34 +4,25 @@
 #include "../IHTTP.interface.hpp"
 #include "errorResponse.hpp"
 #include <sstream>
+#include <iostream>
 #include <ctime>
 #include <iomanip>
-
-//class Response : public IHTTPMessage {
-//private:
-//	std::string response_;
-//public:
-//	Response(const s_startline &startline, const s_headers &headers, const s_bodies &bodies);
-//	const std::string &getResponse() const;
-//private:
-//	virtual void makeStartline();
-//	virtual void makeHeaders();
-//	virtual void makeBodies();
-//};
+#include <unistd.h>
 
 class Response : public IHTTPMessage {
 private:
     std::string response_;
     std::string statusLine_;
     std::string contentLength_;
-//    std::string server_;
+    std::string contentType_;
+    std::string server_;
     std::string date_;
     std::string body_;
-    int responseType_;
+    int statusCode_;
+
 
 public:
-//    Response(const s_startline &startline, const s_headers &headers, const s_bodies &bodies);
-    Response(int responseType);
+    Response(int responseType, const s_startline &startline, const s_headers &headers, const s_bodies &bodies);
 
 const std::string &getResponse() const;
 
@@ -39,19 +30,22 @@ private:
     virtual void makeStartline();
     virtual void makeHeaders();
     virtual void makeBodies();
+
     void createResponse();
 
     void setAttributes();
     void setStatusLine();
     void setDate();
     void setContentLength();
+    void setContentType();
     void setErrorBody();
+    void setBody();
 
-    std::string getStatusLine() const;
-    std::string getDate() const;
-    std::string getBody() const;
-    std::string getContentLength() const;
-
+    const std::string &getStatusLine() const;
+    const std::string &getDate() const;
+    const std::string &getBody() const;
+    const std::string &getContentLength() const;
+    
 };
 
 #endif

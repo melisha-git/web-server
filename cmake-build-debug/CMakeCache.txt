@@ -14,6 +14,12 @@
 # EXTERNAL cache entries
 ########################
 
+//Value Computed by CMake
+../web_server_BINARY_DIR:STATIC=/Users/bgoat/web-serverssss/cmake-build-debug
+
+//Value Computed by CMake
+../web_server_SOURCE_DIR:STATIC=/Users/bgoat/web-serverssss
+
 //Builds the googlemock subproject
 BUILD_GMOCK:BOOL=ON
 

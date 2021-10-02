@@ -6,6 +6,10 @@
 
 #IncludeRegexTransform: 
 
+/Users/bgoat/web-serverssss/Debug.class/Debug.cpp
+Debug.hpp
+/Users/bgoat/web-serverssss/Debug.class/Debug.hpp
+
 /Users/bgoat/web-serverssss/Debug.class/Debug.hpp
 iostream
 -
@@ -53,14 +57,20 @@ errorResponse.hpp
 /Users/bgoat/web-serverssss/IHTTPMessage.interface/Response.class/errorResponse.hpp
 sstream
 -
+iostream
+-
 ctime
 -
 iomanip
+-
+unistd.h
 -
 
 /Users/bgoat/web-serverssss/IHTTPMessage.interface/Response.class/Response.cpp
 Response.class.hpp
 /Users/bgoat/web-serverssss/IHTTPMessage.interface/Response.class/Response.class.hpp
+fstream
+-
 
 /Users/bgoat/web-serverssss/IHTTPMessage.interface/Response.class/errorResponse.hpp
 string
@@ -94,17 +104,29 @@ ServerException/ServerException.hpp
 fcntl.h
 -
 
+/Users/bgoat/web-serverssss/Server.class/ServerException/ServerException.cpp
+ServerException.hpp
+/Users/bgoat/web-serverssss/Server.class/ServerException/ServerException.hpp
+
 /Users/bgoat/web-serverssss/Server.class/ServerException/ServerException.hpp
 exception
 -
 string
 -
 
+/Users/bgoat/web-serverssss/Server.class/UtilsServer/SelectHelper.cpp
+SelectHelper.hpp
+/Users/bgoat/web-serverssss/Server.class/UtilsServer/SelectHelper.hpp
+
 /Users/bgoat/web-serverssss/Server.class/UtilsServer/SelectHelper.hpp
 sys/select.h
 -
 ../ServerException/ServerException.hpp
 /Users/bgoat/web-serverssss/Server.class/ServerException/ServerException.hpp
+
+/Users/bgoat/web-serverssss/Server.class/UtilsServer/StructManager.cpp
+StructManager.hpp
+/Users/bgoat/web-serverssss/Server.class/UtilsServer/StructManager.hpp
 
 /Users/bgoat/web-serverssss/Server.class/UtilsServer/StructManager.hpp
 arpa/inet.h
