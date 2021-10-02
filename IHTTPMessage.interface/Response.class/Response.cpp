@@ -140,7 +140,6 @@ void Response::setBody() {
 
     if (file.is_open()) {
         std::string line;
-        std::cout << "yes" << std::endl;
         while (!file.eof()) {
 
             getline(file, line);
