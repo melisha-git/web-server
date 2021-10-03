@@ -136,9 +136,11 @@ void Response::doGetMethod() {
     if (file.is_open()) {
         std::string line;
         while (!file.eof()) {
-
             getline(file, line);
-            body_.append(line + "\n");
+            body_.append(line);
+            if (file.eof())
+                break ;
+            body_.append("\n");
         }
         file.close();
     }
@@ -163,7 +165,7 @@ void Response::doPostMethod() {
     std::vector<std::string>::iterator ite = s_bodies_.bodies.end();
 
     for (; it != ite; ++it) {
-        outfile << (*it) << "\n";
+        outfile << (*it);
     }
     outfile.close();
 }

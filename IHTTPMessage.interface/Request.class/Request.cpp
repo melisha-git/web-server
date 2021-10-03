@@ -7,8 +7,6 @@ Request::Request(const std::string &request) : request_(request), responseType(0
     isBodies_ = (request_.find("\r\n\r\n") + 4 != request_.length());
     makeHeaders();
     makeBodies();
-    s_headers_.print();
-    s_bodies_.print();
 }
 
 const s_startline &Request::getStartLine() const {
@@ -70,7 +68,7 @@ void Request::makeHeaders() {
 
     size_t headersBegin = request_.find("\r\n") + 2;
     size_t headersLength = request_.find("\r\n\r\n") - headersBegin + 2;
-    _vecHeaders = splitVector(request_.substr(headersBegin, headersLength), "\r\n");
+    _vecHeaders = splitVector(request_.substr(headersBegin, headersLength), "\r\n", false);
 
     auto it = _vecHeaders.cbegin();
     auto ite = _vecHeaders.cend();
@@ -85,24 +83,25 @@ void Request::makeBodies()  {
 		return;
 
 	std::string bodyBegin = request_.substr(request_.find("\r\n\r\n") + 4);
-    std::vector<std::string> vSplit = splitVector(bodyBegin, "\n");
+    std::vector<std::string> vSplit = splitVector(bodyBegin);
 
     s_bodies_.bodies = vSplit;
     if (this->s_bodies_.bodies.empty())
 		this->s_bodies_.bodies.clear();
 }
 
-std::vector<std::string> Request::splitVector(std::string lines, const std::string &delimiter) const  {
+std::vector<std::string> Request::splitVector(std::string lines, const std::string &delimiter, bool keepDelimiter) const  {
 	std::vector<std::string>	result;
-
 	std::string token;
+	size_t lengthToAdd = (keepDelimiter ? delimiter.length() : 0);
 	size_t pos = lines.find(delimiter);
+
 	for (; pos != std::string::npos; pos = lines.find(delimiter)) {
-		token = lines.substr(0, pos);
+		token = lines.substr(0, pos + lengthToAdd);
 		result.push_back(token);
 		lines.erase(0, pos + delimiter.length());
 	}
-	if (isBodies_)
+	if (isBodies_ && keepDelimiter)
 		result.push_back(lines.substr(0, pos));
 	return result;
 }

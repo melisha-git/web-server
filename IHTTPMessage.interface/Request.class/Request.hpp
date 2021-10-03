@@ -26,7 +26,7 @@ private:
 	virtual void makeBodies();
 
 private:
-	std::vector<std::string>	splitVector(std::string lines, const std::string &delimiter = "\n") const;
+	std::vector<std::string>	splitVector(std::string lines, const std::string &delimiter = "\n", bool keepDelimiter = true) const;
     int responseType;
 };
 

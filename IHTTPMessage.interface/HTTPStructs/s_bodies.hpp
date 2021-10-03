@@ -24,7 +24,7 @@ struct s_bodies {
         std::vector<std::string>::const_iterator ite = bodies.cend();
 
         for (; it != ite; ++it) {
-        std::cout << "|" << (*it) << "|\n";
+        std::cout << "|" << (*it);
         }
 	}
 };
