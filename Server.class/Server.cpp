@@ -45,38 +45,6 @@ void Server::doAccept() {
 }
 
 void Server::doRead(int &socket) {
-
-//    const unsigned int MAX_BUF_LENGTH = 4096;
-//    std::vector<char> buffer(MAX_BUF_LENGTH);
-//    std::string receivedString;
-//    int bytesReceived_ = 0;
-//    do {
-//        bytesReceived_ = recv(socket, &buffer[0], buffer.size(), 0);
-//        if (bytesReceived_ <= 0) {
-//            if (bytesReceived_ == 0) {
-//                std::string mes = std::to_string(socket) + " close connect";
-//                Debug::Log(mes, true);
-//                doWrite(socket, mes.c_str());
-//            } else
-//                Debug::Log("no read", true);
-//            close(socket);
-//            selectHelper.deleteMaster(socket);
-//        } else {
-//            receivedString.append(buffer.cbegin(), buffer.cend());
-//        }
-//    } while (bytesReceived_ == MAX_BUF_LENGTH);
-//    if (bytesReceived_ > 0)
-//    {
-//        std::cout << receivedString << std::endl;
-//        Request req(receivedString);
-////        if (req.getResponseType() == 200)
-////        {
-////
-////        }
-//        Response resp(req.getResponseType(), req.getStartLine(), req.getHeaders(), req.getBodies());
-//        doWrite(socket, resp.getResponse());
-//    }
-
 	char buf[1024];
 	std::memset(buf, 0, 1024);
 	error_ = recv(socket, buf, 1024, 0);
@@ -114,19 +82,14 @@ void Server::doRead(int &socket) {
 //}
 
 void Server::doWrite(int &socket, const std::string & buf) {
-//	std::string cBuf = "Client number " + std::to_string(socket) + ": " + buf;
-//
-//for(int j = 0; j <= selectHelper.getCount(); j++) {
+
     if (selectHelper.isMaster(socket)) {
-//        if (j == socket){
-//            error_ = sendAll(socket_, &buf[0], buf.size());
             error_ = send(socket, &buf[0], buf.size(), 0);
             if (error_ == -1) {
                 Debug::Log("no write", true);
-//            }
         }
     }
-//}
+
 //	for(int j = 0; j <= selectHelper.getCount(); j++) {
 //		if (selectHelper.isMaster(j)) {
 //			if (j != socket_ && j != socket) {

@@ -1,12 +1,14 @@
 #include "Request.hpp"
 
 Request::Request(const std::string &request) : request_(request), responseType(0) {
-    isBodies_ = (request_.find("\n\n") != std::string::npos);
+//    isBodies_ = (request_.find("\r\n\r\n") != std::string::npos);
+
     makeStartline();
-//    if (responseType == 0)
-        makeHeaders();
-//    if (responseType == 0)
-        makeBodies();
+    isBodies_ = (request_.find("\r\n\r\n") + 4 != request_.length());
+    makeHeaders();
+    makeBodies();
+    s_headers_.print();
+    s_bodies_.print();
 }
 
 const s_startline &Request::getStartLine() const {
@@ -65,26 +67,28 @@ void Request::makeStartline() {
 
 void Request::makeHeaders() {
     std::vector<std::string> _vecHeaders;
-    isBodies_ = request_.find("\r\n\n");
 
-    _vecHeaders = splitVector(request_.substr(request_.find('\n') + 1, isBodies_), "\r\n");
+    size_t headersBegin = request_.find("\r\n") + 2;
+    size_t headersLength = request_.find("\r\n\r\n") - headersBegin + 2;
+    _vecHeaders = splitVector(request_.substr(headersBegin, headersLength), "\r\n");
 
     auto it = _vecHeaders.cbegin();
     auto ite = _vecHeaders.cend();
     for (;it < ite; it++) {
-        this->s_headers_.headers[(*it).substr(0, request_.find(':'))] = (*it).substr(request_.find(':') + 1,
-                                                                                     request_.find("\r\n"));
+        this->s_headers_.headers[(*it).substr(0, (*it).find(':'))] = (*it).substr((*it).find(':') + 1);
     }
+
 }
 
 void Request::makeBodies()  {
-	if (!isBodies_) {
+	if (!isBodies_)
 		return;
-	}
-	std::vector<std::string> vSplit = splitVector(request_ + "\n\n", "\n\n");
-	//TODO ADD ALL Bodies
-	this->s_bodies_.bodies.push_back(vSplit[1]);
-	if (this->s_bodies_.bodies == std::vector<std::string>{""})
+
+	std::string bodyBegin = request_.substr(request_.find("\r\n\r\n") + 4);
+    std::vector<std::string> vSplit = splitVector(bodyBegin, "\n");
+
+    s_bodies_.bodies = vSplit;
+    if (this->s_bodies_.bodies.empty())
 		this->s_bodies_.bodies.clear();
 }
 
@@ -98,7 +102,7 @@ std::vector<std::string> Request::splitVector(std::string lines, const std::stri
 		result.push_back(token);
 		lines.erase(0, pos + delimiter.length());
 	}
-	if (!isBodies_)
+	if (isBodies_)
 		result.push_back(lines.substr(0, pos));
 	return result;
 }

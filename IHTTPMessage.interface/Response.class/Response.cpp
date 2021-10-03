@@ -3,9 +3,6 @@
 
 Response::Response(int responseType, const s_startline &startline, const s_headers &headers, const s_bodies &bodies) :
         statusCode_(responseType) {
-//	makeStartline();
-//	makeHeaders();
-//	makeBodies();
     s_startline_ = startline;
     s_headers_ = headers;
     s_bodies_ = bodies;
@@ -13,16 +10,46 @@ Response::Response(int responseType, const s_startline &startline, const s_heade
     createResponse();
 }
 
-void Response::makeStartline() {
+/**
+ * fill status line of HTTP Response: protocol version(HTTP/1.1), status code and status text
+ */
 
+void Response::makeStartline() {
+    statusLine_ = "HTTP/1.1 ";
+
+    std::string const arrStatus[] = {"200 OK", "400 Bad Request", "404 Not Found", "405 Method Not Allowed",
+                                     "501 Not Implemented", "505 HTTP Version Not Supported"};
+    std::ostringstream ss;
+    ss << statusCode_;
+
+    std::string errorNumber = ss.str();
+
+    for (int i = 0; i < 5 ; i++)
+        if ((arrStatus[i].find(errorNumber)) != std::string::npos)
+        {
+            statusLine_.append(arrStatus[i]);
+            break;
+        }
 }
 
 void Response::makeHeaders() {
-
+    setDate();
+    setContentType();
+    setContentLength();
 }
 
 void Response::makeBodies() {
-
+    if (statusCode_ == 200)
+    {
+        if (s_startline_.method == "GET")
+            doGetMethod();
+        else if (s_startline_.method == "POST")
+            doPostMethod();
+        else
+            doDeleteMethod();
+    }
+    if (statusCode_ != 200)
+        setErrorBody();
 }
 
 /**
@@ -30,14 +57,9 @@ void Response::makeBodies() {
  */
 
 void Response::setAttributes() {
-    setStatusLine();
-    setDate();
-    setContentType();
-    if (statusCode_ == 200)
-        setBody();
-    if (statusCode_ != 200)
-        setErrorBody();
-    setContentLength();
+    makeStartline();
+    makeBodies();
+	makeHeaders();
 }
 
 /**
@@ -66,28 +88,6 @@ void Response::setDate() {
     << std::setw(2) << std::setfill('0') << timeInfo->tm_min << ":"
     << std::setw(2) << std::setfill('0') << timeInfo->tm_sec << " GMT";
     date_ = out.str();
-}
-
-/**
- * fill status line of HTTP Response: protocol version(HTTP/1.1), status code and status text
- */
-
-void Response::setStatusLine() {
-    statusLine_ = "HTTP/1.1 ";
-
-    std::string const arrStatus[] = {"200 OK", "400 Bad Request", "404 Not Found", "405 Method Not Allowed",
-                                     "501 Not Implemented", "505 HTTP Version Not Supported"};
-    std::ostringstream ss;
-    ss << statusCode_;
-
-    std::string errorNumber = ss.str();
-
-    for (int i = 0; i < 5 ; i++)
-        if ((arrStatus[i].find(errorNumber)) != std::string::npos)
-        {
-            statusLine_.append(arrStatus[i]);
-            break;
-        }
 }
 
 /**
@@ -123,12 +123,7 @@ void Response::setErrorBody() {
     }
 }
 
-/**
- * do some operations on file and its name and sets error status code in some case
- * otherwise it fills body with info from file
- */
-
-void Response::setBody() {
+void Response::doGetMethod() {
     if (s_startline_.target == "/")
         return ;
 
@@ -143,13 +138,38 @@ void Response::setBody() {
         while (!file.eof()) {
 
             getline(file, line);
-            body_.append(line + "\r\n");
-//            body_.append(line);
+            body_.append(line + "\n");
         }
         file.close();
     }
     else
         statusCode_ = 404;
+}
+
+void Response::doPostMethod() {
+    if (s_startline_.target == "/")
+        return ;
+
+    std::string filename = s_startline_.target;
+    filename.erase(0, 1);
+
+    std::ofstream	outfile(filename);
+    if (!outfile) {
+        statusCode_ = 404;
+        return ;
+    }
+
+    std::vector<std::string>::iterator it = s_bodies_.bodies.begin();
+    std::vector<std::string>::iterator ite = s_bodies_.bodies.end();
+
+    for (; it != ite; ++it) {
+        outfile << (*it) << "\n";
+    }
+    outfile.close();
+}
+
+void Response::doDeleteMethod() {
+
 }
 
 /**

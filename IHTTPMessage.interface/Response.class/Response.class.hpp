@@ -34,12 +34,13 @@ private:
     void createResponse();
 
     void setAttributes();
-    void setStatusLine();
     void setDate();
     void setContentLength();
     void setContentType();
     void setErrorBody();
-    void setBody();
+    void doGetMethod();
+    void doPostMethod();
+    void doDeleteMethod();
 
     const std::string &getStatusLine() const;
     const std::string &getDate() const;

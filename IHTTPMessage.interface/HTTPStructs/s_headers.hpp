@@ -3,6 +3,7 @@
 
 #include <map>
 #include <string>
+#include <iostream>
 
 struct s_headers {
 	std::map<std::string, std::string>	headers;
@@ -13,16 +14,20 @@ struct s_headers {
 //	}
 //
 //	s_headers() {};
-//
+
 //	s_headers &operator=(const s_headers &other) {
-////		for (const std::string &str : other.headers) {
-////			this->headers.push_back(str);
-////		}
-////		return *this;
-//    headers = other.headers;
-//    return *this;
+//        if (this == &other)
+//            return *this;
+//        headers = other.headers;
+//		return *this;
 //	}
 
+    void print()
+    {
+        for (auto const &pair: headers) {
+            std::cout << "{" << pair.first << ": " << pair.second << "}\n";
+        }
+    }
 };
 
 #endif
