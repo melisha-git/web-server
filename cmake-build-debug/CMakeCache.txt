@@ -372,7 +372,7 @@ CMAKE_CACHEFILE_DIR:INTERNAL=/Users/bgoat/web-serverssss/cmake-build-debug
 //Major version of cmake used to create the current loaded cache
 CMAKE_CACHE_MAJOR_VERSION:INTERNAL=3
 //Minor version of cmake used to create the current loaded cache
-CMAKE_CACHE_MINOR_VERSION:INTERNAL=19
+CMAKE_CACHE_MINOR_VERSION:INTERNAL=20
 //Patch version of cmake used to create the current loaded cache
 CMAKE_CACHE_PATCH_VERSION:INTERNAL=2
 //ADVANCED property for variable: CMAKE_COLOR_MAKEFILE
@@ -511,7 +511,7 @@ CMAKE_RANLIB-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_READELF
 CMAKE_READELF-ADVANCED:INTERNAL=1
 //Path to CMake installation.
-CMAKE_ROOT:INTERNAL=/Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.19
+CMAKE_ROOT:INTERNAL=/Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.20
 //ADVANCED property for variable: CMAKE_SHARED_LINKER_FLAGS
 CMAKE_SHARED_LINKER_FLAGS-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_SHARED_LINKER_FLAGS_DEBUG
@@ -554,7 +554,7 @@ _GNUInstallDirs_LAST_CMAKE_INSTALL_PREFIX:INTERNAL=/usr/local
 _Python_EXECUTABLE:INTERNAL=/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.7/bin/python3.7
 //Python Properties
 _Python_INTERPRETER_PROPERTIES:INTERNAL=Python;3;7;3;64;m;cpython-37m-darwin;/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.7/lib/python3.7;/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.7/lib/python3.7;/Library/Python/3.7/site-packages;/Library/Python/3.7/site-packages
-_Python_INTERPRETER_SIGNATURE:INTERNAL=27e1c272c064773eb35682ac6808dfba
+_Python_INTERPRETER_SIGNATURE:INTERNAL=fb434f98cb1f85c869baaa5917a7a0f5
 cmake_package_name:INTERNAL=GTest
 generated_dir:INTERNAL=/Users/bgoat/web-serverssss/cmake-build-debug/Google_tests/lib/googletest/generated
 //ADVANCED property for variable: gmock_build_tests

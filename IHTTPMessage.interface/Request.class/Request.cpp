@@ -1,12 +1,12 @@
 #include "Request.hpp"
 
 Request::Request(const std::string &request) : request_(request), responseType(0) {
-//    isBodies_ = (request_.find("\r\n\r\n") != std::string::npos);
-
     makeStartline();
     isBodies_ = (request_.find("\r\n\r\n") + 4 != request_.length());
-    makeHeaders();
-    makeBodies();
+    if (responseType == 200)
+        makeHeaders();
+    if (responseType == 200)
+        makeBodies();
 }
 
 const s_startline &Request::getStartLine() const {
@@ -29,8 +29,7 @@ void Request::makeStartline() {
 	endTarget = startline.find_last_of(' ');
 
 	if (endMethod == std::string::npos || endTarget == std::string::npos ||
-	endMethod == endTarget)
-	{
+	endMethod == endTarget) {
 	    responseType = 400;
         return;
 	}
@@ -51,11 +50,11 @@ void Request::makeStartline() {
 	this->s_startline_.target = startline.substr(0, endTarget - endMethod - 1);
 	this->s_startline_.version = startline.substr(startline.find_last_of(' ') + 1);
 
-	if (s_startline_.version.find("HTTP") != 0)
-	{
+	if (s_startline_.version.find("HTTP") != 0) {
 	    responseType = 400;
 	    return;
 	}
+
 	if (!s_startline_.isVersionCorrect()) {
 	    responseType = 505;
 	    return ;
@@ -63,19 +62,35 @@ void Request::makeStartline() {
 	responseType = 200;
 }
 
+/*
+ * fill attribute s_headers_ (map) with key and value from request_ string
+ *
+ * checks if there whitespace between the header field-name and colon or multiple header fields (according to rfc7230 3.2.4)
+ * and sets responseType_ to 400 in that case
+ *
+ * at the end of function checks if Host field-name is provided (according to rfc7230 5.4),
+ * sets 400 in responseType_ otherwise
+ */
+
 void Request::makeHeaders() {
     std::vector<std::string> _vecHeaders;
 
     size_t headersBegin = request_.find("\r\n") + 2;
     size_t headersLength = request_.find("\r\n\r\n") - headersBegin + 2;
     _vecHeaders = splitVector(request_.substr(headersBegin, headersLength), "\r\n", false);
+    size_t colon;
 
-    auto it = _vecHeaders.cbegin();
-    auto ite = _vecHeaders.cend();
+    std::vector<std::string>::const_iterator it = _vecHeaders.cbegin();
+    std::vector<std::string>::const_iterator ite = _vecHeaders.cend();
     for (;it < ite; it++) {
-        this->s_headers_.headers[(*it).substr(0, (*it).find(':'))] = (*it).substr((*it).find(':') + 1);
+        colon = (*it).find(':');
+        if (colon == std::string::npos || colon == 0 || (*it)[colon - 1] == ' ') { //rfc 7230 (3.2.4)
+            responseType = 400;
+        }
+        this->s_headers_.headers[(*it).substr(0, colon)] = (*it).substr(colon + 1);
     }
-
+    if (!s_headers_.isHostProvided())
+        responseType = 400;
 }
 
 void Request::makeBodies()  {

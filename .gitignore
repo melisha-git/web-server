@@ -1,0 +1,9 @@
+.gitignore
+*.o
+cmake-build-debug/web_server
+*.html
+test100Mb.db
+web_server.cbp
+*.DS_Store
+*.idea
+*.dSYM

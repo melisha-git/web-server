@@ -4,7 +4,7 @@
 Response::Response(int responseType, const s_startline &startline, const s_headers &headers, const s_bodies &bodies) :
         statusCode_(responseType) {
     s_startline_ = startline;
-    s_headers_ = headers;
+    requestHeaders_ = headers;
     s_bodies_ = bodies;
     setAttributes();
     createResponse();
@@ -30,12 +30,15 @@ void Response::makeStartline() {
             statusLine_.append(arrStatus[i]);
             break;
         }
+    statusLine_.append("\r\n");
 }
 
 void Response::makeHeaders() {
     setDate();
     setContentType();
     setContentLength();
+    if (statusCode_ == 405)
+        s_headers_.headers.insert(std::pair<std::string, std::string>("allow:","GET, POST, DELETE\r\n"));
 }
 
 void Response::makeBodies() {
@@ -87,7 +90,9 @@ void Response::setDate() {
     << std::setw(2) << std::setfill('0') << timeInfo->tm_hour << ":"
     << std::setw(2) << std::setfill('0') << timeInfo->tm_min << ":"
     << std::setw(2) << std::setfill('0') << timeInfo->tm_sec << " GMT";
-    date_ = out.str();
+    out.str();
+
+    s_headers_.headers.insert(std::pair<std::string, std::string>("date", out.str()));
 }
 
 /**
@@ -140,7 +145,6 @@ void Response::doGetMethod() {
             body_.append(line);
             if (file.eof())
                 break ;
-            body_.append("\n");
         }
         file.close();
     }
@@ -179,21 +183,29 @@ void Response::doDeleteMethod() {
  */
 
 void Response::setContentLength() {
-    std::ostringstream ss;
+    std::ostringstream contentLength;
 
-    ss << body_.length();
-    contentLength_ = ss.str();
+//    if (statusCode_ / 100 == 2)
+//        return ;
+    contentLength << body_.length();
+    s_headers_.headers.insert(std::pair<std::string, std::string>("content-length", contentLength.str()));
+
 }
 
-
 void Response::setContentType() {
-    if (statusCode_ != 200)
-        contentType_ = "html";
+    if (statusCode_ != 200) {
+        s_headers_.headers.insert(std::pair<std::string, std::string>("content-type", "text/html"));
+        return;
+    }
 
     size_t startOfType = s_startline_.target.find_last_of('.');
+    std::string contentType_;
 
     if (startOfType != std::string::npos)
         contentType_ = s_startline_.target.substr(startOfType + 1, s_startline_.target.length());
+
+    s_headers_.headers.insert(std::pair<std::string, std::string>("content-type", contentType_));
+
 }
 
 /**
@@ -201,24 +213,14 @@ void Response::setContentType() {
  */
 
 void Response::createResponse() {
-    response_.append(getStatusLine() + "\r\n"); // с++11 синтаксис
-    response_.append("date: " + getDate() + "\r\n");
-    if (!contentType_.empty())
-        response_.append("content-type: " + contentType_ + "\r\n");
-    response_.append("content-length: " + getContentLength() + "\r\n");
-
-    if (statusCode_ == 405)
-        response_.append("allow: GET, POST, DELETE\r\n");
-
-    response_.append("\n" + getBody());
+    response_.append(getStatusLine()); // с++11 синтаксис
+    response_.append(s_headers_.getHeaders());
+    response_.append("\r\n");
+    response_.append(getBody());
 }
 
 const std::string &Response::getStatusLine() const { return statusLine_; }
 
-const std::string &Response::getDate() const { return date_;}
-
 const std::string &Response::getBody() const { return body_; }
-
-const std::string &Response::getContentLength() const { return contentLength_; }
 
 const std::string &Response::getResponse() const {return response_; }

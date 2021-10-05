@@ -34,13 +34,29 @@ HTTPStructs/s_headers.hpp
 HTTPStructs/s_bodies.hpp
 /Users/bgoat/web-serverssss/IHTTPMessage.interface/HTTPStructs/s_bodies.hpp
 
-/Users/bgoat/web-serverssss/IHTTPMessage.interface/Request.class/Request.cpp
-Request.hpp
-/Users/bgoat/web-serverssss/IHTTPMessage.interface/Request.class/Request.hpp
-
-/Users/bgoat/web-serverssss/IHTTPMessage.interface/Request.class/Request.hpp
-iostream
--
+/Users/bgoat/web-serverssss/IHTTPMessage.interface/Response.class/Response.class.hpp
 ../IHTTP.interface.hpp
 /Users/bgoat/web-serverssss/IHTTPMessage.interface/IHTTP.interface.hpp
+errorResponse.hpp
+/Users/bgoat/web-serverssss/IHTTPMessage.interface/Response.class/errorResponse.hpp
+sstream
+-
+iostream
+-
+ctime
+-
+iomanip
+-
+unistd.h
+-
+
+/Users/bgoat/web-serverssss/IHTTPMessage.interface/Response.class/Response.cpp
+Response.class.hpp
+/Users/bgoat/web-serverssss/IHTTPMessage.interface/Response.class/Response.class.hpp
+fstream
+-
+
+/Users/bgoat/web-serverssss/IHTTPMessage.interface/Response.class/errorResponse.hpp
+string
+-
 

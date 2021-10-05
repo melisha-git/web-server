@@ -11,15 +11,11 @@
 
 class Response : public IHTTPMessage {
 private:
+    s_headers requestHeaders_;
     std::string response_;
     std::string statusLine_;
-    std::string contentLength_;
-    std::string contentType_;
-    std::string server_;
-    std::string date_;
     std::string body_;
     int statusCode_;
-
 
 public:
     Response(int responseType, const s_startline &startline, const s_headers &headers, const s_bodies &bodies);
@@ -43,10 +39,8 @@ private:
     void doDeleteMethod();
 
     const std::string &getStatusLine() const;
-    const std::string &getDate() const;
     const std::string &getBody() const;
-    const std::string &getContentLength() const;
-    
+
 };
 
 #endif
