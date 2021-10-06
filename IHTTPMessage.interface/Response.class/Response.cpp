@@ -38,7 +38,7 @@ void Response::makeHeaders() {
     setContentType();
     setContentLength();
     if (statusCode_ == 405)
-        s_headers_.headers.insert(std::pair<std::string, std::string>("allow:","GET, POST, DELETE\r\n"));
+        s_headers_.headers.insert(std::pair<std::string, std::string>("Allow:","GET, POST, DELETE\r\n"));
 }
 
 void Response::makeBodies() {
@@ -92,7 +92,7 @@ void Response::setDate() {
     << std::setw(2) << std::setfill('0') << timeInfo->tm_sec << " GMT";
     out.str();
 
-    s_headers_.headers.insert(std::pair<std::string, std::string>("date", out.str()));
+    s_headers_.headers.insert(std::pair<std::string, std::string>("Date", out.str()));
 }
 
 /**
@@ -179,22 +179,22 @@ void Response::doDeleteMethod() {
 }
 
 /**
- * set attribute content length for http header
+ * set attribute content length for http header according to rfc7230 3.3.2
  */
 
 void Response::setContentLength() {
     std::ostringstream contentLength;
 
-//    if (statusCode_ / 100 == 2)
-//        return ;
+    if (statusCode_ / 100 == 1 || statusCode_ == 204) // такие коды не используются
+        return ;
     contentLength << body_.length();
-    s_headers_.headers.insert(std::pair<std::string, std::string>("content-length", contentLength.str()));
+    s_headers_.headers.insert(std::pair<std::string, std::string>("Content-Length", contentLength.str()));
 
 }
 
 void Response::setContentType() {
     if (statusCode_ != 200) {
-        s_headers_.headers.insert(std::pair<std::string, std::string>("content-type", "text/html"));
+        s_headers_.headers.insert(std::pair<std::string, std::string>("Content-Type", "text/html"));
         return;
     }
 
@@ -204,7 +204,7 @@ void Response::setContentType() {
     if (startOfType != std::string::npos)
         contentType_ = s_startline_.target.substr(startOfType + 1, s_startline_.target.length());
 
-    s_headers_.headers.insert(std::pair<std::string, std::string>("content-type", contentType_));
+    s_headers_.headers.insert(std::pair<std::string, std::string>("Content-Type", contentType_));
 
 }
 

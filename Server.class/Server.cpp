@@ -60,7 +60,7 @@ void Server::doRead(int &socket) {
 		selectHelper.deleteMaster(socket);
 	} else {
         const std::string buffer  = std::string(buf);
-//        std::cout << buffer;
+        std::cout << buffer;
         Request req(buffer);
         Response resp(req.getResponseType(), req.getStartLine(), req.getHeaders(), req.getBodies());
 

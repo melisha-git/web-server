@@ -35,6 +35,10 @@ void Request::makeStartline() {
 	}
 
 	this->s_startline_.method = startline.substr(0, endMethod);
+	if (s_startline_.method.find(' ') != std::string::npos) {
+	    responseType = 400;
+	    return ;
+	}
     if (!s_startline_.isMethodImplemented()) {
         responseType = 501;
         return ;
@@ -78,19 +82,19 @@ void Request::makeHeaders() {
     size_t headersBegin = request_.find("\r\n") + 2;
     size_t headersLength = request_.find("\r\n\r\n") - headersBegin + 2;
     _vecHeaders = splitVector(request_.substr(headersBegin, headersLength), "\r\n", false);
-    size_t colon;
 
     std::vector<std::string>::const_iterator it = _vecHeaders.cbegin();
     std::vector<std::string>::const_iterator ite = _vecHeaders.cend();
     for (;it < ite; it++) {
-        colon = (*it).find(':');
-        if (colon == std::string::npos || colon == 0 || (*it)[colon - 1] == ' ') { //rfc 7230 (3.2.4)
-            responseType = 400;
+        if ((responseType = s_headers_.checkHeaderField(*it)) != 200) {
+            s_headers_.headers.clear();
+            return;
         }
-        this->s_headers_.headers[(*it).substr(0, colon)] = (*it).substr(colon + 1);
+        s_headers_.headers[s_headers_.fieldName] = s_headers_.fieldValue;
     }
-    if (!s_headers_.isHostProvided())
+    if (!s_headers_.isHostProvided() || s_headers_.isBothContLenAndTransfEncod())
         responseType = 400;
+//    s_headers_.print();
 }
 
 void Request::makeBodies()  {

@@ -1,4 +1,4 @@
-.gitignore
+cmake-build-debug/
 *.o
 cmake-build-debug/web_server
 *.html
